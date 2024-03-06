@@ -2,11 +2,8 @@ package tino.playtino.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import tino.playtino.Bean.Small.DeleteCommentDAOBean;
-import tino.playtino.Bean.Small.SaveCommentDAOBean;
-import tino.playtino.Bean.Small.UpdateCommentDAOBean;
+import tino.playtino.Bean.Small.*;
 import tino.playtino.domain.*;
-import tino.playtino.repository.JpaCommentRepository;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -16,24 +13,28 @@ import java.util.UUID;
 @Service
 public class CommentService {
 
-    JpaCommentRepository jpaCommentRepository;
+
+
     SaveCommentDAOBean saveCommentDAOBean;
     UpdateCommentDAOBean updateCommentDAOBean;
     DeleteCommentDAOBean deleteCommentDAOBean;
+    GetCommentDAOBean getCommentDAOBean;
+    GetCommentDAOsBean getCommentDAOsBean;
 
     @Autowired
-    public CommentService(JpaCommentRepository jpaCommentRepository, SaveCommentDAOBean saveCommentDAOBean, UpdateCommentDAOBean updateCommentDAOBean, DeleteCommentDAOBean deleteCommentDAOBean){
-        this.jpaCommentRepository = jpaCommentRepository;
+    public CommentService(SaveCommentDAOBean saveCommentDAOBean, UpdateCommentDAOBean updateCommentDAOBean, DeleteCommentDAOBean deleteCommentDAOBean, GetCommentDAOBean getCommentDAOBean, GetCommentDAOsBean getCommentDAOsBean){
         this.saveCommentDAOBean = saveCommentDAOBean;
         this.updateCommentDAOBean = updateCommentDAOBean;
         this.deleteCommentDAOBean = deleteCommentDAOBean;
+        this.getCommentDAOBean = getCommentDAOBean;
+        this.getCommentDAOsBean = getCommentDAOsBean;
     }
 
     //댓글 조회
     public ResponseCommentDTO read(UUID commentId){
 
         //id로 댓글(DAO) 찾아서
-        Comment comment = jpaCommentRepository.findById(commentId).get();
+        Comment comment = getCommentDAOBean.exec(commentId);
         
         //DAO -> DTO 변환(ResponseCommentDTO)
         ResponseCommentDTO responseCommentDTO = new ResponseCommentDTO();
@@ -52,7 +53,7 @@ public class CommentService {
     public List<ResponseCommentDTO> readAll(){
 
         //Comment(DAO) 전체(List)를 찾음 -> commentList
-        List<Comment> commentList = jpaCommentRepository.findAll();
+        List<Comment> commentList = getCommentDAOsBean.exec();
 
         //DTOList 생성
         List<ResponseCommentDTO> responseCommentDTOList = new ArrayList<>();
@@ -86,6 +87,8 @@ public class CommentService {
 
         //DAO에 DTO의 값(userId, Content) 넣어주기
         comment.setUserId(requestCommentSaveDTO.getUserId());
+
+
         comment.setContent(requestCommentSaveDTO.getContent());
 
         //DAO 저장
@@ -97,7 +100,7 @@ public class CommentService {
     public ResponseSuccess update(RequestCommentUpdateDTO requestCommentUpdateDTO){
 
         //DTO의 commentId로 댓글(DAO) 찾기
-        Comment comment = jpaCommentRepository.findById(requestCommentUpdateDTO.getCommentId()).get();
+        Comment comment = getCommentDAOBean.exec(requestCommentUpdateDTO.getCommentId());
 
         //찾은 댓글의 내용 수정 후 저장
         return updateCommentDAOBean.exec(comment, requestCommentUpdateDTO);
@@ -108,7 +111,7 @@ public class CommentService {
     public ResponseSuccess delete(RequestCommentDeleteDTO requestCommentDeleteDTO){
 
         //id를 통해 댓글 찾기(DAO)
-        Comment comment = jpaCommentRepository.findById(requestCommentDeleteDTO.getCommentId()).get();
+        Comment comment = getCommentDAOBean.exec(requestCommentDeleteDTO.getCommentId());
 
         //찾은 DAO 삭제
         return deleteCommentDAOBean.exec(comment, requestCommentDeleteDTO.getUserId());

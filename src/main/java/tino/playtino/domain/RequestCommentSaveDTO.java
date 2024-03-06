@@ -7,8 +7,6 @@ import java.util.UUID;
 
 @Data
 public class RequestCommentSaveDTO {
-    //UUID commentId;
-
     UUID userId;
     String content;
 }

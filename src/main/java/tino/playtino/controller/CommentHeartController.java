@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import tino.playtino.domain.RequestCommentHeartDeleteDTO;
 import tino.playtino.domain.RequestCommentHeartSaveDTO;
+import tino.playtino.domain.ResponseSuccess;
 import tino.playtino.service.CommentHeartService;
 
 import java.util.UUID;
@@ -23,17 +24,15 @@ public class CommentHeartController {
 
     //댓글좋아요 저장
     @PostMapping("/comment-heart")
-    public UUID create(@RequestBody RequestCommentHeartSaveDTO requestCommentHeartSaveDTO){
+    public ResponseSuccess create(@RequestBody RequestCommentHeartSaveDTO requestCommentHeartSaveDTO){
 
-        //저장 -> 저장한 CommentHeart의 PK 반환
         return commentHeartService.insert(requestCommentHeartSaveDTO);
     }
 
     //댓글좋아요 삭제
     @DeleteMapping("/comment-heart")
-    public UUID delete(@RequestBody RequestCommentHeartDeleteDTO requestCommentHeartDeleteDTO){
+    public ResponseSuccess delete(@RequestBody RequestCommentHeartDeleteDTO requestCommentHeartDeleteDTO){
 
-        //삭제 -> 삭제한 CommentHeart의 PK 반환
         return commentHeartService.delete(requestCommentHeartDeleteDTO);
     }
 }

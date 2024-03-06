@@ -2,6 +2,9 @@ package tino.playtino.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import tino.playtino.Bean.Small.DeleteCommentDAOBean;
+import tino.playtino.Bean.Small.SaveCommentDAOBean;
+import tino.playtino.Bean.Small.UpdateCommentDAOBean;
 import tino.playtino.domain.*;
 import tino.playtino.repository.JpaCommentRepository;
 
@@ -14,33 +17,16 @@ import java.util.UUID;
 public class CommentService {
 
     JpaCommentRepository jpaCommentRepository;
+    SaveCommentDAOBean saveCommentDAOBean;
+    UpdateCommentDAOBean updateCommentDAOBean;
+    DeleteCommentDAOBean deleteCommentDAOBean;
 
     @Autowired
-    public CommentService(JpaCommentRepository jpaCommentRepository){
+    public CommentService(JpaCommentRepository jpaCommentRepository, SaveCommentDAOBean saveCommentDAOBean, UpdateCommentDAOBean updateCommentDAOBean, DeleteCommentDAOBean deleteCommentDAOBean){
         this.jpaCommentRepository = jpaCommentRepository;
-    }
-
-    //댓글 저장
-    public UUID insert(RequestCommentSaveDTO requestCommentSaveDTO){
-
-
-        //DTO를 DAO로 변환하기
-        //DAO 생성해서 -> UUID 생성해주고 하트개수와 시간 설정해주기
-        Comment comment = new Comment();
-        
-        comment.setCommentId(UUID.randomUUID());
-        comment.setHeartCount(0);
-        comment.setUploadTime(LocalDateTime.now());
-
-        //생성한 DAO에 DTO의 값(userId, Content) 넣어주기
-        comment.setUserId(requestCommentSaveDTO.getUserId());
-        comment.setContent(requestCommentSaveDTO.getContent());
-
-        //JpaComm~~에 DAO 저장
-        jpaCommentRepository.save(comment);
-
-        //생성한 DAO의 PK 반환
-        return comment.getCommentId();
+        this.saveCommentDAOBean = saveCommentDAOBean;
+        this.updateCommentDAOBean = updateCommentDAOBean;
+        this.deleteCommentDAOBean = deleteCommentDAOBean;
     }
 
     //댓글 조회
@@ -88,37 +74,44 @@ public class CommentService {
         return responseCommentDTOList;
     }
 
+    //댓글 저장
+    public ResponseSuccess insert(RequestCommentSaveDTO requestCommentSaveDTO){
+
+        //DAO를 생성해서 [PK, 하트개수, 업로드시간] 초기화
+        Comment comment = new Comment();
+
+        comment.setCommentId(UUID.randomUUID());
+        comment.setHeartCount(0);
+        comment.setUploadTime(LocalDateTime.now());
+
+        //DAO에 DTO의 값(userId, Content) 넣어주기
+        comment.setUserId(requestCommentSaveDTO.getUserId());
+        comment.setContent(requestCommentSaveDTO.getContent());
+
+        //DAO 저장
+        return saveCommentDAOBean.exec(comment);
+
+    }
+
     //댓글 수정
-    public UUID update(RequestCommentUpdateDTO requestCommentUpdateDTO){
+    public ResponseSuccess update(RequestCommentUpdateDTO requestCommentUpdateDTO){
 
         //DTO의 commentId로 댓글(DAO) 찾기
         Comment comment = jpaCommentRepository.findById(requestCommentUpdateDTO.getCommentId()).get();
 
-        //DTO와 찾은 DAO의 userId가 일치하는지 확인, false면 return
-        if(!(comment.getUserId().equals(requestCommentUpdateDTO.getUserId())))
-            return null;
+        //찾은 댓글의 내용 수정 후 저장
+        return updateCommentDAOBean.exec(comment, requestCommentUpdateDTO);
 
-        //DAO의 댓글 내용을 DTO의 댓글 내용으로 수정
-        comment.setContent(requestCommentUpdateDTO.getContent());
-        // LocalDateTime updateTime = LocalDateTime.now();
-        
-        //값이 변경된 DAO 저장
-        jpaCommentRepository.save(comment);
-        
-        //저장된 comment의 PK 반환
-        return comment.getCommentId();
     }
     
     //댓글 삭제
-    public UUID delete(RequestCommentDeleteDTO requestCommentDeleteDTO){
+    public ResponseSuccess delete(RequestCommentDeleteDTO requestCommentDeleteDTO){
 
-        //id를 통해 객체 찾기(DAO)
+        //id를 통해 댓글 찾기(DAO)
         Comment comment = jpaCommentRepository.findById(requestCommentDeleteDTO.getCommentId()).get();
 
         //찾은 DAO 삭제
-        jpaCommentRepository.delete(comment);
+        return deleteCommentDAOBean.exec(comment, requestCommentDeleteDTO.getUserId());
 
-        //삭제한 Comment의 PK 반환
-        return comment.getCommentId();
     }
 }

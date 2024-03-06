@@ -2,10 +2,7 @@ package tino.playtino.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import tino.playtino.domain.RequestCommentDeleteDTO;
-import tino.playtino.domain.RequestCommentSaveDTO;
-import tino.playtino.domain.RequestCommentUpdateDTO;
-import tino.playtino.domain.ResponseCommentDTO;
+import tino.playtino.domain.*;
 import tino.playtino.service.CommentService;
 
 import java.util.List;
@@ -34,26 +31,23 @@ public class CommentController {
         return commentService.readAll();
     }
 
-
     //댓글 저장
     @PostMapping("/comment")
-    public UUID create(@RequestBody RequestCommentSaveDTO requestCommentSaveDTO){
+    public ResponseSuccess create(@RequestBody RequestCommentSaveDTO requestCommentSaveDTO){
 
-        UUID commentId = commentService.insert(requestCommentSaveDTO);
-
-        return commentId;
+        return commentService.insert(requestCommentSaveDTO);
     }
 
     //댓글 수정
     @PutMapping("/comment")
-    public UUID update(@RequestBody RequestCommentUpdateDTO requestCommentUpdateDTO){
+    public ResponseSuccess update(@RequestBody RequestCommentUpdateDTO requestCommentUpdateDTO){
 
         return commentService.update(requestCommentUpdateDTO);
     }
 
     //댓글 삭제
     @DeleteMapping("/comment")
-    public UUID delete(@RequestBody RequestCommentDeleteDTO requestCommentDeleteDTO){
+    public ResponseSuccess delete(@RequestBody RequestCommentDeleteDTO requestCommentDeleteDTO){
 
         return commentService.delete(requestCommentDeleteDTO);
     }

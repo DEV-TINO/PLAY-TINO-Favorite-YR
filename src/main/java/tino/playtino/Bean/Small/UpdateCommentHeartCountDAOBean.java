@@ -1,4 +1,4 @@
-package tino.playtino.Bean;
+package tino.playtino.Bean.Small;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

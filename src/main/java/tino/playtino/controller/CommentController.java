@@ -31,6 +31,20 @@ public class CommentController {
         return commentService.readAll();
     }
 
+    //댓글 전체 조회 - 최신순
+    @GetMapping("/comment/all/time/{userId}")
+    public List<ResponseCommentByUserDTO> readAllByTime(@PathVariable UUID userId){
+
+        return commentService.readAllByTime(userId);
+    }
+
+    //댓글 전체 조회 - 추천순
+    @GetMapping("/comment/all/heart/{userId}")
+    public List<ResponseCommentByUserDTO> readAllByHeart(@PathVariable UUID userId){
+
+        return commentService.readAllByHeart(userId);
+    }
+
     //댓글 저장
     @PostMapping("/comment")
     public ResponseSuccess create(@RequestBody RequestCommentSaveDTO requestCommentSaveDTO){

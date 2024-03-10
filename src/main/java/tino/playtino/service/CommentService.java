@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tino.playtino.Bean.Small.*;
 import tino.playtino.domain.*;
+import tino.playtino.domain.DTO.*;
 import tino.playtino.repository.JpaCommentRepository;
 
 import java.time.LocalDateTime;
@@ -111,16 +112,17 @@ public class CommentService {
 
     }
 
-    //댓글 전체 조회 - 추천순
+    // 댓글 전체 조회 - 추천순
     public List<ResponseCommentByUserDTO> readAllByHeart(UUID userId){
 
-        //Comment(DAO) 전체(List)를 하트순으로 정렬해서 찾음 -> commentList
+        // Comment(DAO) 전체(List)를 하트순으로 정렬해서 찾음 -> commentList
+        // 하트 개수가 동일하면 최신순
         List<Comment> commentList = getCommentDAOsBean.execByHeart();
 
-        //유저아이디에 따른 DTOList 생성(해당 사용자가 하트를 눌렀는지도 같이 반환해줄 것)
+        // 유저아이디에 따른 DTOList 생성(해당 사용자가 하트를 눌렀는지도 같이 반환해줄 것)
         List<ResponseCommentByUserDTO> responseCommentByUserDTOList = new ArrayList<>();
 
-        //commentList의 DAO를 DTO로 변환해 DTOList에 추가
+        // commentList의 DAO를 DTO로 변환해 DTOList에 추가
         for(Comment comment: commentList){
             ResponseCommentByUserDTO responseCommentDTO = new ResponseCommentByUserDTO();
 
@@ -130,14 +132,14 @@ public class CommentService {
             responseCommentDTO.setHeartCount(comment.getHeartCount());
             responseCommentDTO.setUploadTime(comment.getUploadTime());
 
-            //해당 댓글에 사용자가 하트를 눌렀는지 여부도 저장
+            // 해당 댓글에 사용자가 하트를 눌렀는지 여부도 저장
             Boolean userHeartExists = getBooleanUserHeartExistsBean.checkUserHeartExists(comment.getCommentId(), userId);
             responseCommentDTO.setUserHeartExists(userHeartExists);
 
             responseCommentByUserDTOList.add(responseCommentDTO);
         }
 
-        //생성한 responseCommentByUserDTOS 반환
+        // 생성한 responseCommentByUserDTOS 반환
         return responseCommentByUserDTOList;
 
     }

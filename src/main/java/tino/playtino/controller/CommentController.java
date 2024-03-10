@@ -3,6 +3,7 @@ package tino.playtino.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import tino.playtino.domain.*;
+import tino.playtino.domain.DTO.*;
 import tino.playtino.service.CommentService;
 
 import java.util.List;

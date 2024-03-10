@@ -1,11 +1,11 @@
-package tino.playtino.domain;
+package tino.playtino.domain.DTO;
 
 import lombok.Data;
 
 import java.util.UUID;
 
 @Data
-public class RequestCommentHeartDeleteDTO {
+public class RequestCommentDeleteDTO {
     UUID commentId;
     UUID userId;
 }

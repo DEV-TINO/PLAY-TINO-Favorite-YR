@@ -7,6 +7,8 @@ import tino.playtino.Bean.Small.SaveCommentDAOBean;
 import tino.playtino.Bean.Small.SaveCommentHeartDAOBean;
 import tino.playtino.Bean.Small.UpdateCommentHeartCountDAOBean;
 import tino.playtino.domain.*;
+import tino.playtino.domain.DTO.RequestCommentHeartDeleteDTO;
+import tino.playtino.domain.DTO.RequestCommentHeartSaveDTO;
 import tino.playtino.repository.JpaCommentHeartRepository;
 
 import java.util.UUID;

@@ -32,6 +32,6 @@ public class GetCommentDAOsBean {
     // 모든 댓글을 heartCount를 기준으로 정렬 검색해 List로 반환하는 메서드
     public List<Comment> execByHeart(){
 
-        return jpaCommentRepository.findAllByOrderByHeartCountDesc();
+        return jpaCommentRepository.findAllByOrderByHeartCountDescUploadTimeDesc();
     }
 }

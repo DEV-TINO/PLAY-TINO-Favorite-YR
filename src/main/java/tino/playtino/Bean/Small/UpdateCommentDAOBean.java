@@ -4,11 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import tino.playtino.Bean.CheckUserCommentBean;
 import tino.playtino.domain.Comment;
-import tino.playtino.domain.RequestCommentUpdateDTO;
+import tino.playtino.domain.DTO.RequestCommentUpdateDTO;
 import tino.playtino.domain.ResponseSuccess;
 import tino.playtino.repository.JpaCommentRepository;
-
-import java.util.UUID;
 
 @Component
 public class UpdateCommentDAOBean {

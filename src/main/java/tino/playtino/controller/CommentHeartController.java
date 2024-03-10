@@ -5,12 +5,10 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import tino.playtino.domain.RequestCommentHeartDeleteDTO;
-import tino.playtino.domain.RequestCommentHeartSaveDTO;
+import tino.playtino.domain.DTO.RequestCommentHeartDeleteDTO;
+import tino.playtino.domain.DTO.RequestCommentHeartSaveDTO;
 import tino.playtino.domain.ResponseSuccess;
 import tino.playtino.service.CommentHeartService;
-
-import java.util.UUID;
 
 @RestController
 public class CommentHeartController {

@@ -1,4 +1,4 @@
-package tino.playtino.domain;
+package tino.playtino.domain.DTO;
 
 import jakarta.persistence.Id;
 import lombok.Data;

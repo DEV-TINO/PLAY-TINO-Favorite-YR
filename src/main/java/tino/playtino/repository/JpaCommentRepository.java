@@ -14,5 +14,5 @@ public interface JpaCommentRepository extends JpaRepository<Comment, UUID> {
     List<Comment> findAllByOrderByUploadTimeDesc();
 
     //정렬해서 전체 comment 찾기(기준 : heartCount 내림차순[최신순])
-    List<Comment> findAllByOrderByHeartCountDesc();
+    List<Comment> findAllByOrderByHeartCountDescUploadTimeDesc();
 }

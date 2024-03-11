@@ -2,10 +2,7 @@ package tino.playtino.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import tino.playtino.Bean.Small.DeleteCommentHeartDAOBean;
-import tino.playtino.Bean.Small.SaveCommentDAOBean;
-import tino.playtino.Bean.Small.SaveCommentHeartDAOBean;
-import tino.playtino.Bean.Small.UpdateCommentHeartCountDAOBean;
+import tino.playtino.Bean.Small.*;
 import tino.playtino.domain.*;
 import tino.playtino.domain.DTO.RequestCommentHeartDeleteDTO;
 import tino.playtino.domain.DTO.RequestCommentHeartSaveDTO;
@@ -16,19 +13,19 @@ import java.util.UUID;
 @Service
 public class CommentHeartService {
 
-    JpaCommentHeartRepository jpaCommentHeartRepository;
     UpdateCommentHeartCountDAOBean updateCommentHeartCountDAOBean;
     SaveCommentDAOBean saveCommentDAOBean;
     SaveCommentHeartDAOBean saveCommentHeartDAOBean;
     DeleteCommentHeartDAOBean deleteCommentHeartDAOBean;
+    GetCommentHeartDAOBean getCommentHeartDAOBean;
 
     @Autowired
-    public CommentHeartService(JpaCommentHeartRepository jpaCommentHeartRepository, UpdateCommentHeartCountDAOBean updateCommentHeartCountDAOBean, SaveCommentDAOBean saveCommentDAOBean, SaveCommentHeartDAOBean saveCommentHeartDAOBean, DeleteCommentHeartDAOBean deleteCommentHeartDAOBean){
-        this.jpaCommentHeartRepository = jpaCommentHeartRepository;
+    public CommentHeartService(UpdateCommentHeartCountDAOBean updateCommentHeartCountDAOBean, SaveCommentDAOBean saveCommentDAOBean, SaveCommentHeartDAOBean saveCommentHeartDAOBean, DeleteCommentHeartDAOBean deleteCommentHeartDAOBean, GetCommentHeartDAOBean getCommentHeartDAOBean){
         this.updateCommentHeartCountDAOBean = updateCommentHeartCountDAOBean;
         this.saveCommentDAOBean = saveCommentDAOBean;
         this.saveCommentHeartDAOBean = saveCommentHeartDAOBean;
         this.deleteCommentHeartDAOBean = deleteCommentHeartDAOBean;
+        this.getCommentHeartDAOBean = getCommentHeartDAOBean;
     }
 
     //댓글좋아요 저장
@@ -37,7 +34,7 @@ public class CommentHeartService {
         // 기존에 있는 좋아요인지 중복확인
         UUID commentId = requestCommentHeartSaveDTO.getCommentId();
         UUID userId = requestCommentHeartSaveDTO.getUserId();
-        if(jpaCommentHeartRepository.findByCommentIdAndUserId(commentId, userId) != null){
+        if(getCommentHeartDAOBean.exec(commentId, userId) != null){
             ResponseSuccess responseSuccess = new ResponseSuccess();
             responseSuccess.setSuccess(false);
             return responseSuccess;
@@ -64,8 +61,7 @@ public class CommentHeartService {
 
         //userId와 commentId로 댓글좋아요(DAO) 찾기
         CommentHeart commentHeart
-                = jpaCommentHeartRepository.findByCommentIdAndUserId
-                (requestCommentHeartDeleteDTO.getCommentId(), requestCommentHeartDeleteDTO.getUserId());
+                = getCommentHeartDAOBean.exec(requestCommentHeartDeleteDTO.getCommentId(), requestCommentHeartDeleteDTO.getUserId());
 
         // 해당하는 댓글 좋아요가 있는지 확인 (없으면 '실패' 반환)
         if(commentHeart == null){

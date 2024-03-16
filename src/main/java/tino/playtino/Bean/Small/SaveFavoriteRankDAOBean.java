@@ -1,7 +1,8 @@
 package tino.playtino.Bean.Small;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import tino.playtino.Bean.CheckValidFavoriteRankBean;
+import tino.playtino.others.CheckValidFavoriteRankBean;
 import tino.playtino.domain.FavoriteRank;
 import tino.playtino.domain.ResponseSuccess;
 import tino.playtino.repository.JpaFavoriteRankRepository;
@@ -11,6 +12,8 @@ public class SaveFavoriteRankDAOBean {
 
     JpaFavoriteRankRepository favoriteRankRepository;
     CheckValidFavoriteRankBean checkValidFavoriteRankBean;
+
+    @Autowired
     public SaveFavoriteRankDAOBean(JpaFavoriteRankRepository favoriteRankRepository, CheckValidFavoriteRankBean checkValidFavoriteRankBean){
         this.favoriteRankRepository = favoriteRankRepository;
         this.checkValidFavoriteRankBean = checkValidFavoriteRankBean;

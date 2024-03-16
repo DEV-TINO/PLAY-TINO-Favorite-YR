@@ -1,6 +1,8 @@
 package tino.playtino.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import tino.playtino.Bean.Small.GetFavoriteGameDAOBean;
 import tino.playtino.Bean.Small.GetRandomFavoriteDAOsBean;
 import tino.playtino.Bean.Small.SaveFavoriteGameDAOBean;
 import tino.playtino.domain.FavoriteGame;
@@ -15,16 +17,40 @@ public class FavoriteGameService {
     JpaFavoriteGameRepository jpaFavoriteGameRepository;
     GetRandomFavoriteDAOsBean getRandomFavoriteDAOsBean;
     SaveFavoriteGameDAOBean saveFavoriteGameDAOBean;
+    GetFavoriteGameDAOBean getFavoriteGameDAOBean;
 
-    public FavoriteGameService(JpaFavoriteGameRepository jpaFavoriteGameRepository, GetRandomFavoriteDAOsBean getRandomFavoriteDAOsBean, SaveFavoriteGameDAOBean saveFavoriteGameDAOBean){
+    @Autowired
+    public FavoriteGameService(JpaFavoriteGameRepository jpaFavoriteGameRepository, GetRandomFavoriteDAOsBean getRandomFavoriteDAOsBean, SaveFavoriteGameDAOBean saveFavoriteGameDAOBean, GetFavoriteGameDAOBean getFavoriteGameDAOBean){
         this.jpaFavoriteGameRepository = jpaFavoriteGameRepository;
         this.getRandomFavoriteDAOsBean = getRandomFavoriteDAOsBean;
         this.saveFavoriteGameDAOBean = saveFavoriteGameDAOBean;
+        this.getFavoriteGameDAOBean = getFavoriteGameDAOBean;
     }
 
     // 새 게임 생성 : 게임Id 생성과 조회 및 16개 컨텐츠 조회
-    public ResponseFavoriteGameDTO getGame(UUID userId){
+    public ResponseFavoriteGameDTO getGame(UUID userId, UUID gameId){
 
+        // gameId 가 없을경우 있을경우를 나눈다
+        
+        // gameId가 있을 경우 : 기존에 있던 게임을 찾아서 반환
+        if(gameId != null){
+            
+            // favoriteGame (DAO) 찾기 : getFavoriteGameDAOBean
+            FavoriteGame favoriteGame = getFavoriteGameDAOBean.exec(gameId);
+            
+            // 반환할 ResponseFavoriteGameDTO 생성
+            ResponseFavoriteGameDTO responseFavoriteGameDTO = new ResponseFavoriteGameDTO();
+            
+            // DTO 값 설정
+            responseFavoriteGameDTO.setGameId(gameId);
+            responseFavoriteGameDTO.setFavoriteList(favoriteGame.getFavoriteList());
+
+            // DTO 반환
+            return  responseFavoriteGameDTO;
+        }
+
+        // gameId가 없을 경우
+        
         // FavoriteGame DAO 생성 -> gameId, userId, favoriteList 값 초기화
         FavoriteGame favoriteGame = new FavoriteGame();
         favoriteGame.setGameId(UUID.randomUUID());

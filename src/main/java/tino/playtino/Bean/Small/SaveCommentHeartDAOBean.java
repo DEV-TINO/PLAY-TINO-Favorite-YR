@@ -1,7 +1,8 @@
 package tino.playtino.Bean.Small;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import tino.playtino.Bean.CheckValidCommentHeartBean;
+import tino.playtino.others.CheckValidCommentHeartBean;
 import tino.playtino.domain.CommentHeart;
 import tino.playtino.domain.ResponseSuccess;
 import tino.playtino.repository.JpaCommentHeartRepository;
@@ -12,6 +13,7 @@ public class SaveCommentHeartDAOBean {
     JpaCommentHeartRepository jpaCommentHeartRepository;
     CheckValidCommentHeartBean checkValidCommentHeartBean;
 
+    @Autowired
     public SaveCommentHeartDAOBean(JpaCommentHeartRepository jpaCommentHeartRepository, CheckValidCommentHeartBean checkValidCommentHeartBean){
         this.jpaCommentHeartRepository = jpaCommentHeartRepository;
         this.checkValidCommentHeartBean = checkValidCommentHeartBean;

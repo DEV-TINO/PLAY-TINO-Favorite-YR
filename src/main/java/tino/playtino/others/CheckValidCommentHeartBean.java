@@ -1,4 +1,4 @@
-package tino.playtino.Bean;
+package tino.playtino.others;
 
 import org.springframework.stereotype.Component;
 import tino.playtino.domain.Comment;

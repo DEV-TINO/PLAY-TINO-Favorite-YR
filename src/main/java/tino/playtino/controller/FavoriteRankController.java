@@ -1,9 +1,12 @@
 package tino.playtino.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import tino.playtino.domain.DTO.RequestFavoriteRankDTO;
+import tino.playtino.domain.DTO.ResponseFavoriteRanksDTO;
 import tino.playtino.domain.ResponseSuccess;
 import tino.playtino.service.FavoriteRankService;
 
@@ -11,6 +14,8 @@ import tino.playtino.service.FavoriteRankService;
 public class FavoriteRankController {
 
     FavoriteRankService favoriteRankService;
+
+    @Autowired
     public FavoriteRankController(FavoriteRankService favoriteRankService){
         this.favoriteRankService = favoriteRankService;
     }
@@ -20,5 +25,11 @@ public class FavoriteRankController {
     public ResponseSuccess saveRank(@RequestBody RequestFavoriteRankDTO requestFavoriteRankDTO){
 
         return favoriteRankService.saveRank(requestFavoriteRankDTO);
+    }
+
+    // 랭킹 전체 조회
+    @GetMapping("/favorite/rank/all")
+    public ResponseFavoriteRanksDTO readAll(){
+        return favoriteRankService.readAll();
     }
 }

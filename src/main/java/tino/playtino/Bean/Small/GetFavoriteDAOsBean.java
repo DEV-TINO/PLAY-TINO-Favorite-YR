@@ -5,19 +5,19 @@ import org.springframework.stereotype.Component;
 import tino.playtino.domain.Favorite;
 import tino.playtino.repository.JpaFavoriteRepository;
 
-import java.util.UUID;
+import java.util.List;
 
 @Component
-public class GetFavoriteDAOBean {
+public class GetFavoriteDAOsBean {
 
     JpaFavoriteRepository jpaFavoriteRepository;
 
     @Autowired
-    public GetFavoriteDAOBean(JpaFavoriteRepository jpaFavoriteRepository){
+    public GetFavoriteDAOsBean(JpaFavoriteRepository jpaFavoriteRepository){
         this.jpaFavoriteRepository = jpaFavoriteRepository;
     }
 
-    public Favorite exec(UUID favoriteId){
-        return jpaFavoriteRepository.findById(favoriteId).get();
+    public List<Favorite> exec(){
+        return jpaFavoriteRepository.findAll();
     }
 }

@@ -1,6 +1,6 @@
 package tino.playtino.Bean.Small;
 
-import org.springframework.data.jpa.repository.Query;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import tino.playtino.domain.Favorite;
 import tino.playtino.repository.JpaFavoriteRepository;
@@ -11,6 +11,8 @@ import java.util.List;
 public class GetRandomFavoriteDAOsBean {
 
     JpaFavoriteRepository jpaFavoriteRepository;
+
+    @Autowired
     public GetRandomFavoriteDAOsBean(JpaFavoriteRepository jpaFavoriteRepository){
         this.jpaFavoriteRepository = jpaFavoriteRepository;
     }

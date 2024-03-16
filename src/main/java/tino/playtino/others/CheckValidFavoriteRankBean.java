@@ -1,5 +1,6 @@
-package tino.playtino.Bean;
+package tino.playtino.others;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import tino.playtino.Bean.Small.GetFavoriteDAOBean;
 import tino.playtino.Bean.Small.GetFavoriteGameDAOBean;
@@ -11,6 +12,8 @@ public class CheckValidFavoriteRankBean {
 
     GetFavoriteGameDAOBean getFavoriteGameDAOBean;
     GetFavoriteDAOBean getFavoriteDAOBean;
+
+    @Autowired
     public CheckValidFavoriteRankBean(GetFavoriteGameDAOBean getFavoriteGameDAOBean, GetFavoriteDAOBean getFavoriteDAOBean){
         this.getFavoriteGameDAOBean = getFavoriteGameDAOBean;
         this.getFavoriteDAOBean = getFavoriteDAOBean;

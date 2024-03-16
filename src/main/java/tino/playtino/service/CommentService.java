@@ -15,8 +15,6 @@ import java.util.UUID;
 @Service
 public class CommentService {
 
-
-
     SaveCommentDAOBean saveCommentDAOBean;
     UpdateCommentDAOBean updateCommentDAOBean;
     DeleteCommentDAOBean deleteCommentDAOBean;

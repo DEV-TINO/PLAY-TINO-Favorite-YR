@@ -1,5 +1,6 @@
 package tino.playtino.Bean.Small;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import tino.playtino.domain.FavoriteGame;
 import tino.playtino.repository.JpaFavoriteGameRepository;
@@ -8,6 +9,8 @@ import tino.playtino.repository.JpaFavoriteGameRepository;
 public class SaveFavoriteGameDAOBean {
 
     JpaFavoriteGameRepository jpaFavoriteGameRepository;
+
+    @Autowired
     public SaveFavoriteGameDAOBean(JpaFavoriteGameRepository jpaFavoriteGameRepository){
         this.jpaFavoriteGameRepository = jpaFavoriteGameRepository;
     }

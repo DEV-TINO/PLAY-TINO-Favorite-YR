@@ -1,5 +1,6 @@
 package tino.playtino.Bean.Small;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import tino.playtino.domain.CommentHeart;
 import tino.playtino.repository.JpaCommentHeartRepository;
@@ -11,6 +12,7 @@ public class GetBooleanUserHeartExistsBean {
 
     JpaCommentHeartRepository jpaCommentHeartRepository;
 
+    @Autowired
     public GetBooleanUserHeartExistsBean(JpaCommentHeartRepository jpaCommentHeartRepository){
         this.jpaCommentHeartRepository = jpaCommentHeartRepository;
     }

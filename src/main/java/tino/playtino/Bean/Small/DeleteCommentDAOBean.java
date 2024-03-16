@@ -2,7 +2,7 @@ package tino.playtino.Bean.Small;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import tino.playtino.Bean.CheckUserCommentBean;
+import tino.playtino.others.CheckUserCommentBean;
 import tino.playtino.domain.Comment;
 import tino.playtino.domain.ResponseSuccess;
 import tino.playtino.repository.JpaCommentRepository;

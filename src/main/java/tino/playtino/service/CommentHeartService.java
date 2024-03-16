@@ -6,8 +6,8 @@ import tino.playtino.Bean.Small.*;
 import tino.playtino.domain.*;
 import tino.playtino.domain.DTO.RequestCommentHeartDeleteDTO;
 import tino.playtino.domain.DTO.RequestCommentHeartSaveDTO;
-import tino.playtino.repository.JpaCommentHeartRepository;
 
+import java.util.Map;
 import java.util.UUID;
 
 @Service
@@ -31,9 +31,11 @@ public class CommentHeartService {
     //댓글좋아요 저장
     public ResponseSuccess insert(RequestCommentHeartSaveDTO requestCommentHeartSaveDTO){
 
+        //commentHeartSaveBean.exec();
         // 기존에 있는 좋아요인지 중복확인
         UUID commentId = requestCommentHeartSaveDTO.getCommentId();
         UUID userId = requestCommentHeartSaveDTO.getUserId();
+
         if(getCommentHeartDAOBean.exec(commentId, userId) != null){
             ResponseSuccess responseSuccess = new ResponseSuccess();
             responseSuccess.setSuccess(false);

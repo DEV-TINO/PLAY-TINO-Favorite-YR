@@ -1,4 +1,4 @@
-package tino.playtino.Bean;
+package tino.playtino.others;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;

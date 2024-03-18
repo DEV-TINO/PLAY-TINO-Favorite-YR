@@ -46,6 +46,14 @@ public class CommentController {
         return commentService.readAllByHeart(userId);
     }
 
+    // 댓글 조회 - 페이징
+    @GetMapping("/comment/page/{userId}")
+    public List<ResponseCommentByUserDTO> readPage(@PathVariable UUID userId,
+                                                   @RequestParam(required = false, defaultValue = "0", value = "page") int pageNo,
+                                                  @RequestParam(required = false, defaultValue = "uploadTime", value = "criteria") String criteria){
+        return commentService.readPage(userId, pageNo, criteria);
+    }
+
     //댓글 저장
     @PostMapping("/comment")
     public ResponseSuccess create(@RequestBody RequestCommentSaveDTO requestCommentSaveDTO){

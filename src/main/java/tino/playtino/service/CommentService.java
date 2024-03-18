@@ -1,11 +1,14 @@
 package tino.playtino.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import tino.playtino.Bean.Small.*;
 import tino.playtino.domain.*;
 import tino.playtino.domain.DTO.*;
-import tino.playtino.repository.JpaCommentRepository;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -21,17 +24,15 @@ public class CommentService {
     GetCommentDAOBean getCommentDAOBean;
     GetCommentDAOsBean getCommentDAOsBean;
     GetBooleanUserHeartExistsBean getBooleanUserHeartExistsBean;
-    JpaCommentRepository jpaCommentRepository;
 
     @Autowired
-    public CommentService(SaveCommentDAOBean saveCommentDAOBean, UpdateCommentDAOBean updateCommentDAOBean, DeleteCommentDAOBean deleteCommentDAOBean, GetCommentDAOBean getCommentDAOBean, GetCommentDAOsBean getCommentDAOsBean, GetBooleanUserHeartExistsBean getBooleanUserHeartExistsBean, JpaCommentRepository jpaCommentRepository){
+    public CommentService(SaveCommentDAOBean saveCommentDAOBean, UpdateCommentDAOBean updateCommentDAOBean, DeleteCommentDAOBean deleteCommentDAOBean, GetCommentDAOBean getCommentDAOBean, GetCommentDAOsBean getCommentDAOsBean, GetBooleanUserHeartExistsBean getBooleanUserHeartExistsBean){
         this.saveCommentDAOBean = saveCommentDAOBean;
         this.updateCommentDAOBean = updateCommentDAOBean;
         this.deleteCommentDAOBean = deleteCommentDAOBean;
         this.getCommentDAOBean = getCommentDAOBean;
         this.getCommentDAOsBean = getCommentDAOsBean;
         this.getBooleanUserHeartExistsBean = getBooleanUserHeartExistsBean;
-        this.jpaCommentRepository = jpaCommentRepository;
     }
 
     //댓글 조회
@@ -105,7 +106,7 @@ public class CommentService {
             responseCommentByUserDTOList.add(responseCommentDTO);
         }
 
-        //생성한 responseCommentByUserDTOS 반환
+        //생성한 responseCommentByUserDTOList 반환
         return responseCommentByUserDTOList;
 
     }
@@ -137,7 +138,39 @@ public class CommentService {
             responseCommentByUserDTOList.add(responseCommentDTO);
         }
 
-        // 생성한 responseCommentByUserDTOS 반환
+        // 생성한 responseCommentByUserDTOList 반환
+        return responseCommentByUserDTOList;
+
+    }
+
+    // 댓글 조회 (페이징)
+    public List<ResponseCommentByUserDTO> readPage(UUID userId, int pageNo, String criteria){
+
+        // pageNo(페이지넘버)와 criteria(기준)으로 페이징
+        Pageable pageable = PageRequest.of(pageNo, 10, Sort.by(Sort.Direction.DESC, criteria));
+        Page<Comment> page = getCommentDAOsBean.exec(pageable);
+
+        // 유저아이디에 따른 DTOList 생성(해당 사용자가 하트를 눌렀는지도 같이 반환해줄 것)
+        List<ResponseCommentByUserDTO> responseCommentByUserDTOList = new ArrayList<>();
+
+        // commentList의 DAO를 DTO로 변환해 DTOList에 추가
+        for(Comment comment: page){
+            ResponseCommentByUserDTO responseCommentDTO = new ResponseCommentByUserDTO();
+
+            responseCommentDTO.setCommentId(comment.getCommentId());
+            responseCommentDTO.setUserId(comment.getUserId());
+            responseCommentDTO.setContent(comment.getContent());
+            responseCommentDTO.setHeartCount(comment.getHeartCount());
+            responseCommentDTO.setUploadTime(comment.getUploadTime());
+
+            // 해당 댓글에 사용자가 하트를 눌렀는지 여부도 저장
+            Boolean userHeartExists = getBooleanUserHeartExistsBean.checkUserHeartExists(comment.getCommentId(), userId);
+            responseCommentDTO.setUserHeartExists(userHeartExists);
+
+            responseCommentByUserDTOList.add(responseCommentDTO);
+        }
+
+        // 생성한 responseCommentByUserDTOList 반환
         return responseCommentByUserDTOList;
 
     }

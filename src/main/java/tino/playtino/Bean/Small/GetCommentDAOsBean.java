@@ -1,6 +1,9 @@
 package tino.playtino.Bean.Small;
 
+import org.hibernate.dialect.unique.CreateTableUniqueDelegate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 import tino.playtino.domain.Comment;
 import tino.playtino.repository.JpaCommentRepository;
@@ -33,5 +36,11 @@ public class GetCommentDAOsBean {
     public List<Comment> execByHeart(){
 
         return jpaCommentRepository.findAllByOrderByHeartCountDescUploadTimeDesc();
+    }
+
+    // 댓글을 페이지로 반환하는 메서드
+    public Page<Comment> exec(Pageable pageable){
+
+        return jpaCommentRepository.findAll(pageable);
     }
 }

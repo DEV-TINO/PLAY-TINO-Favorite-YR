@@ -46,7 +46,7 @@ public class FavoriteRankService {
     // 랭킹 전체 조회
     public ResponseFavoriteRanksDTO readAll(){
 
-        // Map<UUID, Integer> 생성 : key는 favoriteId, Value는 count!
+        // favoriteId와 count를 저장할 Map<UUID, Integer> 생성
         Map<UUID, Integer> map =  new HashMap<>();
 
         // Favorite 전체 검색
@@ -67,6 +67,7 @@ public class FavoriteRankService {
         }
         // -> favoriteId : count 로 구성된 Map이 된다.
 
+        // Map에서 count를 기준으로 내림차순 정렬
         List<Map.Entry<UUID, Integer>> entryList = new LinkedList<>(map.entrySet());
         entryList.sort(new Comparator<Map.Entry<UUID, Integer>>() {
             @Override
@@ -75,6 +76,7 @@ public class FavoriteRankService {
             }
         });
 
+        // 내림차순 정렬된 순서대로 (반환할) DTO(랭킹)의 리스트를 생성하고 값 설정하는 과정!
         // List<ResponseFavoriteRankDTO> favoriteRankList 생성
         List<ResponseFavoriteRankDTO> favoriteRankList = new ArrayList<>();
 

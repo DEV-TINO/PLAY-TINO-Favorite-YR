@@ -1,7 +1,6 @@
 package tino.playtino.others;
 
 import org.springframework.stereotype.Component;
-import tino.playtino.domain.Comment;
 import tino.playtino.domain.CommentHeart;
 
 @Component

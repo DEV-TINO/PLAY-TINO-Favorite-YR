@@ -47,10 +47,10 @@ public class CommentController {
     }
 
     // 댓글 조회 - 페이징
-    @GetMapping("/comment/page/{userId}")
+    @GetMapping("/comment/page/{userId}/{criteria}")
     public List<ResponseCommentByUserDTO> readPage(@PathVariable UUID userId,
-                                                   @RequestParam(required = false, defaultValue = "0", value = "page") int pageNo,
-                                                  @RequestParam(required = false, defaultValue = "uploadTime", value = "criteria") String criteria){
+                                                   @PathVariable String criteria,
+                                                   @RequestParam(required = false, defaultValue = "0", value = "page") int pageNo){
         return commentService.readPage(userId, pageNo, criteria);
     }
 

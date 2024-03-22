@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import tino.playtino.Bean.Small.GetFavoriteDAOBean;
 import tino.playtino.Bean.Small.GetFavoriteGameDAOBean;
-import tino.playtino.domain.FavoriteGame;
 import tino.playtino.domain.FavoriteRank;
 
 @Component

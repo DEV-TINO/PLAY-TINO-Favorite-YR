@@ -11,4 +11,5 @@ public class ResponseFavoriteRankDTO {
     String favoriteTitle;
 
     Integer favoriteRankCount;
+    Double favoriteRankPercentage;
 }

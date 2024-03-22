@@ -1,14 +1,15 @@
 package tino.playtino.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import tino.playtino.Bean.Small.*;
+import tino.playtino.domain.*;
 import tino.playtino.domain.DTO.RequestFavoriteRankDTO;
 import tino.playtino.domain.DTO.ResponseFavoriteRankDTO;
-import tino.playtino.domain.DTO.ResponseFavoriteRanksDTO;
-import tino.playtino.domain.Favorite;
-import tino.playtino.domain.FavoriteRank;
-import tino.playtino.domain.ResponseSuccess;
 import tino.playtino.repository.JpaFavoriteRankRepository;
 
 import java.util.*;
@@ -21,14 +22,18 @@ public class FavoriteRankService {
     GetFavoriteRankCountBean getFavoriteRankCountBean;
     GetFavoriteDAOsBean getFavoriteDAOsBean;
     GetFavoriteDAOBean getFavoriteDAOBean;
+    SaveFavoriteCountDAOBean saveFavoriteCountDAOBean;
+    GetFavoriteCountDAOsBean getFavoriteCountDAOsBean;
 
     @Autowired
-    public FavoriteRankService(JpaFavoriteRankRepository jpaFavoriteRankRepository, SaveFavoriteRankDAOBean saveFavoriteRankDAOBean, GetFavoriteRankCountBean getFavoriteRankCountBean, GetFavoriteDAOsBean getFavoriteDAOsBean, GetFavoriteDAOBean getFavoriteDAOBean){
+    public FavoriteRankService(JpaFavoriteRankRepository jpaFavoriteRankRepository, SaveFavoriteRankDAOBean saveFavoriteRankDAOBean, GetFavoriteRankCountBean getFavoriteRankCountBean, GetFavoriteDAOsBean getFavoriteDAOsBean, GetFavoriteDAOBean getFavoriteDAOBean, SaveFavoriteCountDAOBean saveFavoriteCountDAOBean, GetFavoriteCountDAOsBean getFavoriteCountDAOsBean){
         this.jpaFavoriteRankRepository = jpaFavoriteRankRepository;
         this.saveFavoriteRankDAOBean = saveFavoriteRankDAOBean;
         this.getFavoriteRankCountBean = getFavoriteRankCountBean;
         this.getFavoriteDAOsBean = getFavoriteDAOsBean;
         this.getFavoriteDAOBean = getFavoriteDAOBean;
+        this.saveFavoriteCountDAOBean = saveFavoriteCountDAOBean;
+        this.getFavoriteCountDAOsBean = getFavoriteCountDAOsBean;
     }
 
     // 랭킹[게임에서 1등한 Favorite] 저장
@@ -44,13 +49,15 @@ public class FavoriteRankService {
     }
 
     // 랭킹 전체 조회
-    public ResponseFavoriteRanksDTO readAll(){
+    public List<ResponseFavoriteRankDTO> readAll(){
 
         // favoriteId와 count를 저장할 Map<UUID, Integer> 생성
         Map<UUID, Integer> map =  new HashMap<>();
 
         // Favorite 전체 검색
         List<Favorite> favoriteList = getFavoriteDAOsBean.exec();
+
+        Integer totalCount = 0;
 
         // Favorite 하나씩 꺼내(for)
         for(Favorite favorite : favoriteList) {
@@ -60,6 +67,8 @@ public class FavoriteRankService {
 
             // favoriteId로 getFavoriteRankCountBean의 exec(favoriteId) 써서 카운트 알아내고
             Integer count = getFavoriteRankCountBean.exec(favoriteId);
+
+            totalCount += count;
 
             // favoriteId와 count를 Map에 Put 한다.
             map.put(favoriteId, count);
@@ -84,6 +93,7 @@ public class FavoriteRankService {
         for(Map.Entry<UUID, Integer> entry : entryList) {
 
             UUID favoriteId = entry.getKey();
+            Integer rankCount = map.get(favoriteId);
 
             // favoriteId로 Favorite 찾아
             Favorite favorite = getFavoriteDAOBean.exec(favoriteId);
@@ -93,20 +103,77 @@ public class FavoriteRankService {
             favoriteRank.setFavoriteId(favoriteId);
             favoriteRank.setFavoriteImage(favorite.getFavoriteImage());
             favoriteRank.setFavoriteTitle(favorite.getFavoriteTitle());
-            favoriteRank.setFavoriteRankCount(map.get(favoriteId));
+            favoriteRank.setFavoriteRankCount(rankCount);
+            if(totalCount!=0) favoriteRank.setFavoriteRankPercentage((double)rankCount/(double)totalCount);
+            else favoriteRank.setFavoriteRankPercentage(0.0);
 
             // favoriteRankList에 저장(add)
             favoriteRankList.add(favoriteRank);
         }
 
-        // RanksDTO 생성
-        ResponseFavoriteRanksDTO responseFavoriteRanksDTO = new ResponseFavoriteRanksDTO();
-
-        // DTO 값 설정 : 완료된 전체 게임 수, 찾아서 정렬한 favoriteRankList
-        responseFavoriteRanksDTO.setFavoriteRankTotal(getFavoriteRankCountBean.exec());
-        responseFavoriteRanksDTO.setFavoriteRanks(favoriteRankList);
-
-        // 설정된 RanksDTO 반환
-        return responseFavoriteRanksDTO;
+        return favoriteRankList;
     }
+
+    // 랭킹 조회 - 페이징
+    public List<ResponseFavoriteRankDTO> readPage(Integer pageNo){
+
+        // Favorite 전체 검색
+        List<Favorite> favoriteList = getFavoriteDAOsBean.exec();
+
+        Integer totalCount = 0;
+
+        // Favorite 하나씩 꺼내(for)
+        for(Favorite favorite : favoriteList) {
+
+            // favorite에서 FavoriteId get하고
+            UUID favoriteId = favorite.getFavoriteId();
+
+            // favoriteId로 getFavoriteRankCountBean의 exec(favoriteId) 써서 카운트 알아내고
+            Integer rankCount = getFavoriteRankCountBean.exec(favoriteId);
+
+            totalCount += rankCount;
+
+            // favoriteId와 rankCount를 가지는 DAO생성, Respository에 저장
+            FavoriteCount favoriteCount = new FavoriteCount();
+            favoriteCount.setFavoriteId(favoriteId);
+            favoriteCount.setRankCount(rankCount);
+            saveFavoriteCountDAOBean.exec(favoriteCount);
+        }
+
+        // FavoriteCount를 pageNo(페이지넘버), rnakCount 내림차순 기준으로 정렬 페이징
+        Pageable pageable = PageRequest.of(pageNo, 3, Sort.by(Sort.Direction.DESC, "rankCount"));
+        Page<FavoriteCount> page = getFavoriteCountDAOsBean.exec(pageable);
+
+
+        // 내림차순 정렬된 순서대로 (반환할) DTO(랭킹)의 리스트를 생성하고 값 설정하는 과정!
+        // List<ResponseFavoriteRankDTO> favoriteRankList 생성
+        List<ResponseFavoriteRankDTO> favoriteRankList = new ArrayList<>();
+
+        // [ count : 내림차순 ] 정렬된 map에서 key 하나씩 꺼내(for)
+        for(FavoriteCount favoriteCount : page) {
+
+            UUID favoriteId = favoriteCount.getFavoriteId();
+            Integer rankCount = favoriteCount.getRankCount();
+
+            // favoriteId로 Favorite 찾아
+            Favorite favorite = getFavoriteDAOBean.exec(favoriteId);
+
+            // ResponseFavoriteRankDTO 생성 및 초기화
+            ResponseFavoriteRankDTO favoriteRankDTO = new ResponseFavoriteRankDTO();
+            favoriteRankDTO.setFavoriteId(favoriteId);
+            favoriteRankDTO.setFavoriteImage(favorite.getFavoriteImage());
+            favoriteRankDTO.setFavoriteTitle(favorite.getFavoriteTitle());
+            favoriteRankDTO.setFavoriteRankCount(rankCount);
+            if(totalCount!=0) favoriteRankDTO.setFavoriteRankPercentage((double)rankCount/(double)totalCount);
+            else favoriteRankDTO.setFavoriteRankPercentage(0.0);
+
+            // favoriteRankList에 저장(add)
+            favoriteRankList.add(favoriteRankDTO);
+        }
+
+        return favoriteRankList;
+    }
+
+
+
 }

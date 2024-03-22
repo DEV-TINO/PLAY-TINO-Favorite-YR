@@ -7,11 +7,12 @@ import tino.playtino.domain.*;
 import tino.playtino.domain.DTO.RequestCommentHeartDeleteDTO;
 import tino.playtino.domain.DTO.RequestCommentHeartSaveDTO;
 
-import java.util.Map;
 import java.util.UUID;
 
 @Service
 public class CommentHeartService {
+
+    GetCommentDAOBean getCommentDAOBean;
 
     UpdateCommentHeartCountDAOBean updateCommentHeartCountDAOBean;
     SaveCommentDAOBean saveCommentDAOBean;
@@ -49,7 +50,8 @@ public class CommentHeartService {
         commentHeart.setUserId(requestCommentHeartSaveDTO.getUserId());
 
         // 댓글 좋아요 생성으로 인한 댓글 좋아요 갯수 증가(해당 댓글 DAO를 업데이트)
-        Comment comment = updateCommentHeartCountDAOBean.heartCountUp(requestCommentHeartSaveDTO.getCommentId());
+        Comment comment = getCommentDAOBean.exec(requestCommentHeartSaveDTO.getCommentId());
+        updateCommentHeartCountDAOBean.heartCountUp(comment);
 
         // 좋아요 수가 변경된 댓글 DAO 저장[업데이트]
         saveCommentDAOBean.exec(comment);
@@ -73,7 +75,8 @@ public class CommentHeartService {
         }
 
         // 댓글 좋아요 삭제로 인한 댓글 좋아요 개수 감소(해당 댓글 DAO를 업데이트)
-        Comment comment = updateCommentHeartCountDAOBean.heartCountDown(commentHeart.getCommentId());
+        Comment comment = getCommentDAOBean.exec(requestCommentHeartDeleteDTO.getCommentId());
+        updateCommentHeartCountDAOBean.heartCountDown(comment);
 
         // 좋아요 수가 변경된 댓글 DAO 저장[업데이트]
         saveCommentDAOBean.exec(comment);

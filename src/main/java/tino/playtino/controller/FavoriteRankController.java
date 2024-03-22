@@ -3,9 +3,11 @@ package tino.playtino.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import tino.playtino.domain.DTO.RequestFavoriteRankDTO;
-import tino.playtino.domain.DTO.ResponseFavoriteRanksDTO;
+import tino.playtino.domain.DTO.ResponseFavoriteRankDTO;
 import tino.playtino.domain.ResponseSuccess;
 import tino.playtino.service.FavoriteRankService;
+
+import java.util.List;
 
 @RestController
 public class FavoriteRankController {
@@ -26,8 +28,14 @@ public class FavoriteRankController {
 
     // 랭킹 전체 조회
     @GetMapping("/favorite/rank/all")
-    public ResponseFavoriteRanksDTO readAll(){
+    public List<ResponseFavoriteRankDTO> readAll(){
         return favoriteRankService.readAll();
+    }
+
+    // 랭킹 조회 - 페이징
+    @GetMapping("/favorite/rank/page")
+    public List<ResponseFavoriteRankDTO> readPage(@RequestParam(required = false, defaultValue = "0", value = "page") Integer pageNo){
+        return favoriteRankService.readPage(pageNo);
     }
 
 }

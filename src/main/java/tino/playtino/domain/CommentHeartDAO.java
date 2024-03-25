@@ -7,7 +7,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
@@ -15,12 +14,10 @@ import java.util.UUID;
 @NoArgsConstructor
 @Getter
 @Setter
-public class Comment {
+public class CommentHeartDAO {
     @Id
-    UUID commentId;
+    UUID commentHeartId;
 
+    UUID commentId;
     UUID userId;
-    String content;
-    Integer heartCount;
-    LocalDateTime uploadTime;
 }

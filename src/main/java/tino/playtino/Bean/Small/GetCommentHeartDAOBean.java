@@ -2,7 +2,7 @@ package tino.playtino.Bean.Small;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import tino.playtino.domain.CommentHeart;
+import tino.playtino.domain.CommentHeartDAO;
 import tino.playtino.repository.JpaCommentHeartRepository;
 
 import java.util.UUID;
@@ -17,7 +17,7 @@ public class GetCommentHeartDAOBean {
         this.jpaCommentHeartRepository = jpaCommentHeartRepository;
     }
 
-    public CommentHeart exec(UUID commentId, UUID userId){
+    public CommentHeartDAO exec(UUID commentId, UUID userId){
         return jpaCommentHeartRepository.findByCommentIdAndUserId(commentId, userId);
     }
 }

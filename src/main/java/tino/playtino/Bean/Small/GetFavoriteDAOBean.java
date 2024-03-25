@@ -2,7 +2,7 @@ package tino.playtino.Bean.Small;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import tino.playtino.domain.Favorite;
+import tino.playtino.domain.FavoriteDAO;
 import tino.playtino.repository.JpaFavoriteRepository;
 
 import java.util.UUID;
@@ -17,7 +17,7 @@ public class GetFavoriteDAOBean {
         this.jpaFavoriteRepository = jpaFavoriteRepository;
     }
 
-    public Favorite exec(UUID favoriteId){
+    public FavoriteDAO exec(UUID favoriteId){
         return jpaFavoriteRepository.findById(favoriteId).get();
     }
 }

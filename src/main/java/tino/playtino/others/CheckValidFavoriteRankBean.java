@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import tino.playtino.Bean.Small.GetFavoriteDAOBean;
 import tino.playtino.Bean.Small.GetFavoriteGameDAOBean;
-import tino.playtino.domain.FavoriteRank;
+import tino.playtino.domain.FavoriteRankDAO;
 
 @Component
 public class CheckValidFavoriteRankBean {
@@ -19,14 +19,14 @@ public class CheckValidFavoriteRankBean {
     }
 
     // FavoriteRank DAO 값이 유효한지 확인하는 기능
-    public Boolean exec(FavoriteRank favoriteRank){
+    public Boolean exec(FavoriteRankDAO favoriteRankDAO){
 
         // gameId가 존재하는 게임인지 확인하기 위해 gameId로 FavoriteGame 검색하고
         // favoriteId가 존재하는 컨텐트인지 확인하기 위해 favoriteId로 Favorite 검색
         // -> 둘 다 null이 아니면 true 반환
         if(
-                getFavoriteGameDAOBean.exec(favoriteRank.getGameId()) != null
-                && getFavoriteDAOBean.exec(favoriteRank.getFavoriteId()) != null
+                getFavoriteGameDAOBean.exec(favoriteRankDAO.getGameId()) != null
+                && getFavoriteDAOBean.exec(favoriteRankDAO.getFavoriteId()) != null
         ) {
             return true;
         }

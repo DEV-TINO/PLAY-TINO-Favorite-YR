@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
+@CrossOrigin("*")
 public class CommentController {
     private final CommentService commentService;
 
@@ -18,6 +19,7 @@ public class CommentController {
         this.commentService = commentService;
     }
 
+    /*
     //댓글 조회
     @GetMapping("/comment/{commentId}")
     public ResponseCommentDTO read(@PathVariable UUID commentId){
@@ -45,34 +47,35 @@ public class CommentController {
 
         return commentService.readAllByHeart(userId);
     }
+    */
 
     // 댓글 조회 - 페이징
-    @GetMapping("/comment/page/{userId}/{criteria}")
-    public List<ResponseCommentByUserDTO> readPage(@PathVariable UUID userId,
-                                                   @PathVariable String criteria,
-                                                   @RequestParam(required = false, defaultValue = "0", value = "page") int pageNo){
-        return commentService.readPage(userId, pageNo, criteria);
+    @GetMapping("/comment/all/{userId}/{criteria}")
+    public List<ResponseCommentByUserDTO> readCommentAll(@PathVariable UUID userId,
+                                                         @PathVariable String criteria,
+                                                         @RequestParam(required = false, defaultValue = "0", value = "page") int pageNo){
+        return commentService.readCommentAll(userId, pageNo, criteria);
     }
 
     //댓글 저장
     @PostMapping("/comment")
-    public ResponseSuccess create(@RequestBody RequestCommentSaveDTO requestCommentSaveDTO){
+    public ResponseSuccess createComment(@RequestBody RequestCommentSaveDTO requestCommentSaveDTO){
 
-        return commentService.insert(requestCommentSaveDTO);
+        return commentService.createComment(requestCommentSaveDTO);
     }
 
     //댓글 수정
     @PutMapping("/comment")
-    public ResponseSuccess update(@RequestBody RequestCommentUpdateDTO requestCommentUpdateDTO){
+    public ResponseSuccess updateComment(@RequestBody RequestCommentUpdateDTO requestCommentUpdateDTO){
 
-        return commentService.update(requestCommentUpdateDTO);
+        return commentService.updateComment(requestCommentUpdateDTO);
     }
 
     //댓글 삭제
     @DeleteMapping("/comment")
-    public ResponseSuccess delete(@RequestBody RequestCommentDeleteDTO requestCommentDeleteDTO){
+    public ResponseSuccess deleteComment(@RequestBody RequestCommentDeleteDTO requestCommentDeleteDTO){
 
-        return commentService.delete(requestCommentDeleteDTO);
+        return commentService.deleteComment(requestCommentDeleteDTO);
     }
 
 }

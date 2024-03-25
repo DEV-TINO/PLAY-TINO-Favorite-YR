@@ -10,6 +10,7 @@ import tino.playtino.service.FavoriteRankService;
 import java.util.List;
 
 @RestController
+@CrossOrigin("*")
 public class FavoriteRankController {
 
     FavoriteRankService favoriteRankService;
@@ -26,16 +27,18 @@ public class FavoriteRankController {
         return favoriteRankService.saveRank(requestFavoriteRankDTO);
     }
 
+    /*
     // 랭킹 전체 조회
     @GetMapping("/favorite/rank/all")
     public List<ResponseFavoriteRankDTO> readAll(){
         return favoriteRankService.readAll();
     }
+    */
 
     // 랭킹 조회 - 페이징
-    @GetMapping("/favorite/rank/page")
-    public List<ResponseFavoriteRankDTO> readPage(@RequestParam(required = false, defaultValue = "0", value = "page") Integer pageNo){
-        return favoriteRankService.readPage(pageNo);
+    @GetMapping("/favorite/rank/all")
+    public List<ResponseFavoriteRankDTO> readRankAll(@RequestParam(required = false, defaultValue = "0", value = "page") Integer pageNo){
+        return favoriteRankService.readRankAll(pageNo);
     }
 
 }

@@ -2,7 +2,7 @@ package tino.playtino.Bean.Small;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import tino.playtino.domain.Comment;
+import tino.playtino.domain.CommentDAO;
 
 @Component
 public class UpdateCommentHeartCountDAOBean {
@@ -15,14 +15,14 @@ public class UpdateCommentHeartCountDAOBean {
     }
 
     //댓글좋아요 추가(+1)
-    public void heartCountUp(Comment comment){
+    public void heartCountUp(CommentDAO commentDAO){
         //DAO의 댓글좋아요개수(HeartCount) +1
-        comment.setHeartCount(comment.getHeartCount()+1);
+        commentDAO.setHeartCount(commentDAO.getHeartCount()+1);
     }
 
     //댓글좋아요 삭제(-1)
-    public void heartCountDown(Comment comment){
+    public void heartCountDown(CommentDAO commentDAO){
         //DAO의 댓글좋아요개수(HeartCount) -1
-        comment.setHeartCount(comment.getHeartCount()-1);
+        commentDAO.setHeartCount(commentDAO.getHeartCount()-1);
     }
 }

@@ -30,7 +30,7 @@ public class CommentHeartService {
     }
 
     //댓글좋아요 저장
-    public ResponseSuccess insert(RequestCommentHeartSaveDTO requestCommentHeartSaveDTO){
+    public ResponseSuccess createHeart(RequestCommentHeartSaveDTO requestCommentHeartSaveDTO){
 
         //commentHeartSaveBean.exec();
         // 기존에 있는 좋아요인지 중복확인
@@ -44,45 +44,45 @@ public class CommentHeartService {
         }
 
         // 저장할 댓글좋아요 DAO 생성 및 값 초기화
-        CommentHeart commentHeart = new CommentHeart();
-        commentHeart.setCommentHeartId(UUID.randomUUID());
-        commentHeart.setCommentId(requestCommentHeartSaveDTO.getCommentId());
-        commentHeart.setUserId(requestCommentHeartSaveDTO.getUserId());
+        CommentHeartDAO commentHeartDAO = new CommentHeartDAO();
+        commentHeartDAO.setCommentHeartId(UUID.randomUUID());
+        commentHeartDAO.setCommentId(requestCommentHeartSaveDTO.getCommentId());
+        commentHeartDAO.setUserId(requestCommentHeartSaveDTO.getUserId());
 
         // 댓글 좋아요 생성으로 인한 댓글 좋아요 갯수 증가(해당 댓글 DAO를 업데이트)
-        Comment comment = getCommentDAOBean.exec(requestCommentHeartSaveDTO.getCommentId());
-        updateCommentHeartCountDAOBean.heartCountUp(comment);
+        CommentDAO commentDAO = getCommentDAOBean.exec(requestCommentHeartSaveDTO.getCommentId());
+        updateCommentHeartCountDAOBean.heartCountUp(commentDAO);
 
         // 좋아요 수가 변경된 댓글 DAO 저장[업데이트]
-        saveCommentDAOBean.exec(comment);
+        saveCommentDAOBean.exec(commentDAO);
 
         // 댓글좋아요 DAO 저장
-        return saveCommentHeartDAOBean.exec(commentHeart);
+        return saveCommentHeartDAOBean.exec(commentHeartDAO);
     }
 
     //댓글좋아요 삭제
-    public ResponseSuccess delete(RequestCommentHeartDeleteDTO requestCommentHeartDeleteDTO){
+    public ResponseSuccess deleteHeart(RequestCommentHeartDeleteDTO requestCommentHeartDeleteDTO){
 
         //userId와 commentId로 댓글좋아요(DAO) 찾기
-        CommentHeart commentHeart
+        CommentHeartDAO commentHeartDAO
                 = getCommentHeartDAOBean.exec(requestCommentHeartDeleteDTO.getCommentId(), requestCommentHeartDeleteDTO.getUserId());
 
         // 해당하는 댓글 좋아요가 있는지 확인 (없으면 '실패' 반환)
-        if(commentHeart == null){
+        if(commentHeartDAO == null){
             ResponseSuccess responseSuccess = new ResponseSuccess();
             responseSuccess.setSuccess(false);
             return responseSuccess;
         }
 
         // 댓글 좋아요 삭제로 인한 댓글 좋아요 개수 감소(해당 댓글 DAO를 업데이트)
-        Comment comment = getCommentDAOBean.exec(requestCommentHeartDeleteDTO.getCommentId());
-        updateCommentHeartCountDAOBean.heartCountDown(comment);
+        CommentDAO commentDAO = getCommentDAOBean.exec(requestCommentHeartDeleteDTO.getCommentId());
+        updateCommentHeartCountDAOBean.heartCountDown(commentDAO);
 
         // 좋아요 수가 변경된 댓글 DAO 저장[업데이트]
-        saveCommentDAOBean.exec(comment);
+        saveCommentDAOBean.exec(commentDAO);
 
         // 댓글좋아요 DAO 삭제
         //jpaCommentHeartRepository.delete(commentHeart);
-        return deleteCommentHeartDAOBean.exec(commentHeart);
+        return deleteCommentHeartDAOBean.exec(commentHeartDAO);
     }
 }

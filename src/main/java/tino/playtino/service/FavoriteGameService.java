@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import tino.playtino.Bean.Small.GetFavoriteGameDAOBean;
 import tino.playtino.Bean.Small.GetRandomFavoriteDAOsBean;
 import tino.playtino.Bean.Small.SaveFavoriteGameDAOBean;
-import tino.playtino.domain.FavoriteGame;
+import tino.playtino.domain.FavoriteGameDAO;
 import tino.playtino.domain.DTO.ResponseFavoriteGameDTO;
 import tino.playtino.repository.JpaFavoriteGameRepository;
 
@@ -28,7 +28,7 @@ public class FavoriteGameService {
     }
 
     // 새 게임 생성 : 게임Id 생성과 조회 및 16개 컨텐츠 조회
-    public ResponseFavoriteGameDTO getGame(UUID userId, UUID gameId){
+    public ResponseFavoriteGameDTO createGame(UUID userId, UUID gameId){
 
         // gameId 가 없을경우 있을경우를 나눈다
         
@@ -36,14 +36,14 @@ public class FavoriteGameService {
         if(gameId != null){
             
             // favoriteGame (DAO) 찾기 : getFavoriteGameDAOBean
-            FavoriteGame favoriteGame = getFavoriteGameDAOBean.exec(gameId);
+            FavoriteGameDAO favoriteGameDAO = getFavoriteGameDAOBean.exec(gameId);
             
             // 반환할 ResponseFavoriteGameDTO 생성
             ResponseFavoriteGameDTO responseFavoriteGameDTO = new ResponseFavoriteGameDTO();
             
             // DTO 값 설정
             responseFavoriteGameDTO.setGameId(gameId);
-            responseFavoriteGameDTO.setFavoriteList(favoriteGame.getFavoriteList());
+            responseFavoriteGameDTO.setFavoriteDAOList(favoriteGameDAO.getFavoriteDAOList());
 
             // DTO 반환
             return  responseFavoriteGameDTO;
@@ -52,22 +52,22 @@ public class FavoriteGameService {
         // gameId가 없을 경우
         
         // FavoriteGame DAO 생성 -> gameId, userId, favoriteList 값 초기화
-        FavoriteGame favoriteGame = new FavoriteGame();
-        favoriteGame.setGameId(UUID.randomUUID());
-        favoriteGame.setUserId(userId);
+        FavoriteGameDAO favoriteGameDAO = new FavoriteGameDAO();
+        favoriteGameDAO.setGameId(UUID.randomUUID());
+        favoriteGameDAO.setUserId(userId);
 
         // 16개 컨텐츠 랜덤 선택 // 일단 2개로...
-        favoriteGame.setFavoriteList(getRandomFavoriteDAOsBean.exec());
+        favoriteGameDAO.setFavoriteDAOList(getRandomFavoriteDAOsBean.exec());
 
         // DAO 저장
-        saveFavoriteGameDAOBean.exec(favoriteGame);
+        saveFavoriteGameDAOBean.exec(favoriteGameDAO);
 
         // ResponseFavoriteGameDTO 생성
         ResponseFavoriteGameDTO responseFavoriteGameDTO = new ResponseFavoriteGameDTO();
 
         // gameId와 favoriteList 값 설정
-        responseFavoriteGameDTO.setGameId(favoriteGame.getGameId());
-        responseFavoriteGameDTO.setFavoriteList(favoriteGame.getFavoriteList());
+        responseFavoriteGameDTO.setGameId(favoriteGameDAO.getGameId());
+        responseFavoriteGameDTO.setFavoriteDAOList(favoriteGameDAO.getFavoriteDAOList());
 
         // 생성된 ResponseFavoriteGameDTO 반환
         return responseFavoriteGameDTO;

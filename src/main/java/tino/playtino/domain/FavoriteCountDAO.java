@@ -14,9 +14,9 @@ import java.util.UUID;
 @NoArgsConstructor
 @Getter
 @Setter
-public class FavoriteRank {
+public class FavoriteCountDAO {
     @Id
-    UUID gameId;
-
     UUID favoriteId;
+
+    Integer rankCount;
 }

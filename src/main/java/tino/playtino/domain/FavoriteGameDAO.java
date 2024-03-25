@@ -1,12 +1,15 @@
 package tino.playtino.domain;
 
+import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import tino.playtino.others.StringListConverter;
 
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -14,10 +17,12 @@ import java.util.UUID;
 @NoArgsConstructor
 @Getter
 @Setter
-public class CommentHeart {
+public class FavoriteGameDAO {
     @Id
-    UUID commentHeartId;
+    UUID gameId;
 
-    UUID commentId;
     UUID userId;
+
+    @Convert(converter = StringListConverter.class)
+    List<FavoriteDAO> favoriteDAOList;
 }

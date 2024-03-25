@@ -2,7 +2,7 @@ package tino.playtino.Bean.Small;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import tino.playtino.domain.CommentHeart;
+import tino.playtino.domain.CommentHeartDAO;
 import tino.playtino.domain.ResponseSuccess;
 import tino.playtino.repository.JpaCommentHeartRepository;
 
@@ -17,7 +17,7 @@ public class DeleteCommentHeartDAOBean {
     }
 
     // 댓글좋아요 삭제
-    public ResponseSuccess exec(CommentHeart commentHeart){
+    public ResponseSuccess exec(CommentHeartDAO commentHeartDAO){
 
         //responseSuccess 생성
         ResponseSuccess responseSuccess = new ResponseSuccess();
@@ -26,7 +26,7 @@ public class DeleteCommentHeartDAOBean {
         responseSuccess.setSuccess(true);
 
         //성공한 경우만 댓글좋아요(DAO) 삭제
-        jpaCommentHeartRepository.delete(commentHeart);
+        jpaCommentHeartRepository.delete(commentHeartDAO);
 
         //'성공 여부'가 설정된 responseSuccess 반환
         return responseSuccess;

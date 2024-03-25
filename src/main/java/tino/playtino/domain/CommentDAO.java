@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
@@ -14,9 +15,12 @@ import java.util.UUID;
 @NoArgsConstructor
 @Getter
 @Setter
-public class FavoriteCount {
+public class CommentDAO {
     @Id
-    UUID favoriteId;
+    UUID commentId;
 
-    Integer rankCount;
+    UUID userId;
+    String content;
+    Integer heartCount;
+    LocalDateTime uploadTime;
 }

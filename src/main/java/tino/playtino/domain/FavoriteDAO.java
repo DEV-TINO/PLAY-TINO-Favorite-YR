@@ -14,7 +14,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @Getter
 @Setter
-public class Favorite {
+public class FavoriteDAO {
     @Id
     UUID favoriteId;
 
